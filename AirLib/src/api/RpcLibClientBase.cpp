@@ -337,7 +337,7 @@ vector<string> RpcLibClientBase::simListSceneObjects(const string& name_regex) c
 
 std::vector<std::string> RpcLibClientBase::simSwapTextures(const std::string& tags, int tex_id, int component_id, int material_id)
 {
-	return pimpl_->client.call("simSwapTextures", tags, tex_id, component_id, material_id).as<vector<string>>();
+    return pimpl_->client.call("simSwapTextures", tags, tex_id, component_id, material_id).as<vector<string>>();
 }
 
 msr::airlib::Pose RpcLibClientBase::simGetObjectPose(const std::string& object_name) const
@@ -359,7 +359,7 @@ void RpcLibClientBase::simSetCameraOrientation(const std::string& camera_name, c
 }
 void RpcLibClientBase::simSetCameraPosition(const std::string& camera_name, const Vector3r& position, const std::string& vehicle_name)
 {
-	pimpl_->client.call("simSetCameraPosition", camera_name, RpcLibAdapatorsBase::Vector3r(position), vehicle_name);
+    pimpl_->client.call("simSetCameraPosition", camera_name, RpcLibAdapatorsBase::Vector3r(position), vehicle_name);
 }
 msr::airlib::Kinematics::State RpcLibClientBase::simGetGroundTruthKinematics(const std::string& vehicle_name) const
 {

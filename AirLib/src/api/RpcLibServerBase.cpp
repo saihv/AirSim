@@ -225,10 +225,10 @@ RpcLibServerBase::RpcLibServerBase(ApiProvider* api_provider, const std::string&
         getVehicleSimApi(vehicle_name)->setCameraOrientation(camera_name, orientation.to());
     });
 
-	pimpl_->server.bind("simSetCameraPosition", [&](const std::string& camera_name, const RpcLibAdapatorsBase::Vector3r& position,
-		const std::string& vehicle_name) -> void {
-		getVehicleSimApi(vehicle_name)->setCameraPosition(camera_name, position.to());
-	});
+    pimpl_->server.bind("simSetCameraPosition", [&](const std::string& camera_name, const RpcLibAdapatorsBase::Vector3r& position,
+	const std::string& vehicle_name) -> void {
+	getVehicleSimApi(vehicle_name)->setCameraPosition(camera_name, position.to());
+    });
 
     pimpl_->server.bind("simGetCollisionInfo", [&](const std::string& vehicle_name) -> RpcLibAdapatorsBase::CollisionInfo {
         const auto& collision_info = getVehicleSimApi(vehicle_name)->getCollisionInfo(); 

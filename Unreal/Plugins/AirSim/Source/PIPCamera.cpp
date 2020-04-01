@@ -256,7 +256,7 @@ void APIPCamera::setCameraOrientation(const FRotator& rotator)
 
 void APIPCamera::setCameraPosition(const FVector& position)
 {
-	this->SetActorRelativeLocation(position);
+    this->SetActorRelativeLocation(position);
 }
 void APIPCamera::setupCameraFromSettings(const APIPCamera::CameraSetting& camera_setting, const NedTransform& ned_transform)
 {

@@ -64,7 +64,7 @@ float NedTransform::fromNed(float length) const
 }
 FVector NedTransform::fromRelativeNed(const NedTransform::Vector3r& position) const
 {
-	return NedTransform::toFVector(position, 1 / world_to_meters_, true);
+    return NedTransform::toFVector(position, 1 / world_to_meters_, true);
 }
 
 FVector NedTransform::fromLocalNed(const NedTransform::Vector3r& position) const
