@@ -412,6 +412,15 @@ void PawnSimApi::setCameraOrientation(const std::string& camera_name, const msr:
     }, true);
 }
 
+void PawnSimApi::setCameraPosition(const std::string& camera_name, const msr::airlib::Vector3r& position)
+{
+	UAirBlueprintLib::RunCommandOnGameThread([this, camera_name, position]() {
+		APIPCamera* camera = getCamera(camera_name);
+		const FVector position_fvec = ned_transform_.fromRelativeNed(position);
+		camera->setCameraPosition(position_fvec);
+	}, true);
+}
+
 //parameters in NED frame
 PawnSimApi::Pose PawnSimApi::getPose() const
 {

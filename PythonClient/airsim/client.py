@@ -136,6 +136,9 @@ class VehicleClient:
     def simSetCameraOrientation(self, camera_name, orientation, vehicle_name = ''):
         # TODO: below str() conversion is only needed for legacy reason and should be removed in future
         self.client.call('simSetCameraOrientation', str(camera_name), orientation, vehicle_name)
+    def simSetCameraPosition(self, camera_name, position, vehicle_name = ''):
+        # TODO: below str() conversion is only needed for legacy reason and should be removed in future
+        self.client.call('simSetCameraPosition', str(camera_name), position, vehicle_name)
 
     def simGetGroundTruthKinematics(self, vehicle_name = ''):
         kinematics_state = self.client.call('simGetGroundTruthKinematics', vehicle_name)

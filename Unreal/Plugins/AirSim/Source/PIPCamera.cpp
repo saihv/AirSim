@@ -254,6 +254,10 @@ void APIPCamera::setCameraOrientation(const FRotator& rotator)
     this->SetActorRelativeRotation(rotator);
 }
 
+void APIPCamera::setCameraPosition(const FVector& position)
+{
+	this->SetActorRelativeLocation(position);
+}
 void APIPCamera::setupCameraFromSettings(const APIPCamera::CameraSetting& camera_setting, const NedTransform& ned_transform)
 {
     //TODO: should we be ignoring position and orientation settings here?
