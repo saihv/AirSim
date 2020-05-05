@@ -18,6 +18,11 @@ MultirotorPawnSimApi::MultirotorPawnSimApi(const Params& params)
     setPose(pose, false);
 }
 
+MultirotorPawnSimApi::~MultirotorPawnSimApi()
+{
+    state_log_handle_.close();
+}
+
 void MultirotorPawnSimApi::initialize()
 {
     PawnSimApi::initialize();
@@ -39,6 +44,10 @@ void MultirotorPawnSimApi::initialize()
     pending_pose_status_ = PendingPoseStatus::NonePending;
     reset_pending_ = false;
     did_reset_ = false;
+
+    std::string log_folderpath = common_utils::FileSystem::getLogFolderPath(true);
+    std::string log_filepath = common_utils::FileSystem::getLogFileNamePath(log_folderpath, state_log_filename_, "", ".txt", false);
+    state_log_handle_.open(log_filepath, std::ios_base::out);
 }
 
 void MultirotorPawnSimApi::pawnTick(float dt)
@@ -151,9 +160,10 @@ void MultirotorPawnSimApi::update()
 {
     //environment update for current position
     PawnSimApi::update();
-
     //update forces on vertices
     multirotor_physics_body_->update();
+
+    writeStatetoFile();
 
     //update to controller must be done after kinematics have been updated by physics engine
 }
@@ -163,6 +173,35 @@ void MultirotorPawnSimApi::reportState(StateReporter& reporter)
     PawnSimApi::reportState(reporter);
 
     multirotor_physics_body_->reportState(reporter);
+    writeStatetoFile();
+}
+
+void MultirotorPawnSimApi::writeStatetoFile()
+{
+    std::stringstream ss;
+    uint64_t timestamp_millis = static_cast<uint64_t>(msr::airlib::ClockFactory::get()->nowNanos() / 1.0E6);
+
+    const Kinematics::State* kinematics = getGroundTruthKinematics();
+
+    getRecordFileLine(false);
+
+    ss << timestamp_millis << ","
+        << kinematics->pose.position.x() << "," << kinematics->pose.position.y() << "," << kinematics->pose.position.z() << ","
+        << kinematics->pose.orientation.w() << "," << kinematics->pose.orientation.x() << "," << kinematics->pose.orientation.y() << "," << kinematics->pose.orientation.z() << ","
+        << kinematics->twist.linear.x() << "," << kinematics->twist.linear.y() << "," << kinematics->twist.linear.z() << ","
+        << kinematics->twist.angular.x() << "," << kinematics->twist.angular.y() << "," << kinematics->twist.angular.z() << ","
+        << kinematics->accelerations.linear.x() << "," << kinematics->accelerations.linear.y() << "," << kinematics->accelerations.linear.z() << ","
+        << kinematics->accelerations.angular.x() << "," << kinematics->accelerations.angular.y() << "," << kinematics->accelerations.angular.z() << ",";
+
+    for (unsigned int i = 0; i < rotor_count_; ++i) {
+        const auto& rotor_output = multirotor_physics_body_->getRotorOutput(i);
+
+        ss << static_cast<int>(rotor_output.turning_direction) << "," 
+            << rotor_output.control_signal_input  << "," << rotor_output.control_signal_filtered << "," 
+            << rotor_output.speed << "," << rotor_output.thrust << "," << rotor_output.torque_scaler;
+    }
+
+    state_log_handle_ << ss.str() << "\n";
 }
 
 MultirotorPawnSimApi::UpdatableObject* MultirotorPawnSimApi::getPhysicsBody()

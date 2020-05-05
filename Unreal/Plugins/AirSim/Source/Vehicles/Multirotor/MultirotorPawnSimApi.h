@@ -28,11 +28,12 @@ public:
 public:
     virtual void initialize() override;
 
-    virtual ~MultirotorPawnSimApi() = default;
+    //virtual ~MultirotorPawnSimApi() = default;
 
     //VehicleSimApiBase interface
     //implements game interface to update pawn
     MultirotorPawnSimApi(const Params& params);
+    virtual ~MultirotorPawnSimApi();
     virtual void updateRenderedState(float dt) override;
     virtual void updateRendering(float dt) override;
 
@@ -83,4 +84,10 @@ private:
 
     Pose last_phys_pose_; //for trace lines showing vehicle path
     std::vector<std::string> vehicle_api_messages_;
+
+    void writeStatetoFile();
+
+    std::string state_log_filename_ = "multirotor_state_log";
+    std::ofstream state_log_handle_;
+    bool state_log_header_line_ = true;
 };
