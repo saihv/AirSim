@@ -48,6 +48,8 @@ void MultirotorPawnSimApi::initialize()
     std::string log_folderpath = common_utils::FileSystem::getLogFolderPath(true);
     std::string log_filepath = common_utils::FileSystem::getLogFileNamePath(log_folderpath, state_log_filename_, "", ".txt", false);
     state_log_handle_.open(log_filepath, std::ios_base::out);
+
+    writeStateHeaderLine();
 }
 
 void MultirotorPawnSimApi::pawnTick(float dt)
@@ -176,14 +178,27 @@ void MultirotorPawnSimApi::reportState(StateReporter& reporter)
     writeStatetoFile();
 }
 
+void MultirotorPawnSimApi::writeStateHeaderLine()
+{
+    std::stringstream ss;
+
+    ss << "Timestamp,pos_x,pos_y,pos_z,rot_w,rot_x,rot_y,rot_z,lin_vel_x,lin_vel_y,lin_vel_z,"
+        << "ang_vel_x,ang_vel_y,ang_vel_z,lin_acc_x,lin_acc_y,lin_acc_z,ang_acc_x,ang_acc_y,ang_acc_z,"
+        << "force_x,force_y,force_z,torque_x,torque_y,torque_z,"
+        << "rotor1_dir,rotor1_input,rotor1_input_filt,rotor1_speed,rotor1_thrust,rotor1_torque,"
+        << "rotor2_dir,rotor2_input,rotor2_input_filt,rotor2_speed,rotor2_thrust,rotor2_torque,"
+        << "rotor3_dir,rotor3_input,rotor3_input_filt,rotor3_speed,rotor3_thrust,rotor3_torque,"
+        << "rotor4_dir,rotor4_input,rotor4_input_filt,rotor4_speed,rotor4_thrust,rotor4_torque";
+
+    state_log_handle_ << ss.str() << "\n";
+}
+
 void MultirotorPawnSimApi::writeStatetoFile()
 {
     std::stringstream ss;
     uint64_t timestamp_millis = static_cast<uint64_t>(msr::airlib::ClockFactory::get()->nowNanos() / 1.0E6);
 
     const Kinematics::State* kinematics = getGroundTruthKinematics();
-
-    getRecordFileLine(false);
 
     ss << timestamp_millis << ","
         << kinematics->pose.position.x() << "," << kinematics->pose.position.y() << "," << kinematics->pose.position.z() << ","
@@ -192,6 +207,11 @@ void MultirotorPawnSimApi::writeStatetoFile()
         << kinematics->twist.angular.x() << "," << kinematics->twist.angular.y() << "," << kinematics->twist.angular.z() << ","
         << kinematics->accelerations.linear.x() << "," << kinematics->accelerations.linear.y() << "," << kinematics->accelerations.linear.z() << ","
         << kinematics->accelerations.angular.x() << "," << kinematics->accelerations.angular.y() << "," << kinematics->accelerations.angular.z() << ",";
+
+    const auto& multirotor_wrench = multirotor_physics_body_->getWrench();
+
+    ss << multirotor_wrench.force.x() << "," << multirotor_wrench.force.y() << "," << multirotor_wrench.force.z() << ","
+        << multirotor_wrench.torque.x() << "," << multirotor_wrench.torque.y() << "," << multirotor_wrench.torque.z() << ",";
 
     for (unsigned int i = 0; i < rotor_count_; ++i) {
         const auto& rotor_output = multirotor_physics_body_->getRotorOutput(i);

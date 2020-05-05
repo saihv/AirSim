@@ -86,6 +86,7 @@ private:
     std::vector<std::string> vehicle_api_messages_;
 
     void writeStatetoFile();
+    void writeStateHeaderLine();
 
     std::string state_log_filename_ = "multirotor_state_log";
     std::ofstream state_log_handle_;
