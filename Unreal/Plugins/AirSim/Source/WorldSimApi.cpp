@@ -161,6 +161,89 @@ AActor* WorldSimApi::createNewActor(const FActorSpawnParameters& spawn_params, c
     return NewActor;
 }
 
+void WorldSimApi::createVoxelGrid(const int& x_size, const int& y_size, const int& z_size, const float& res, const std::string& output_file)
+{
+    if (!vginit)
+        voxel_grid_.resize(x_size * y_size * z_size);
+
+    int ctr = 0;
+    float scale = 1 / res;
+    FCollisionQueryParams params;
+    params.bFindInitialOverlaps = true;
+    params.bTraceComplex = false;
+    params.TraceTag = "SVONLeafRasterize";
+    for (float i = 0; i < x_size; i++) {
+        for (float j = 0; j < y_size; j++) {
+            for (float k = 0; k < z_size; k++) {
+                int idx = i * (y_size * x_size) + k * x_size + j;
+                FVector position = FVector((i - x_size/2)*scale, (j - y_size/2)* scale, (k - z_size/2)* scale);
+                voxel_grid_[idx] = (unsigned int)simmode_->GetWorld()->OverlapBlockingTestByChannel(position, FQuat::Identity, ECollisionChannel::ECC_Pawn, FCollisionShape::MakeBox(FVector(1.0)), params);
+
+            }
+        }
+    }
+    /*
+    for (int i = 0; i < x_size; i++) {
+        for (int j = 0; j < y_size; j++) {
+            for (int k = 0; k < z_size; k++) {
+                int idx = k * (y_size * x_size) + j * x_size + i;
+                FVector position = FVector(i - x_size / 2, j - y_size / 2, k - z_size / 2);
+                if (voxel_grid_[idx]) {
+                    DrawDebugPoint(simmode_->GetWorld(), position, 0.1, FColor::Red, true, -1.0);
+                }
+                else
+                    DrawDebugPoint(simmode_->GetWorld(), position, 0.1, FColor::Green, true, -1.0);
+            }
+        }
+    }*/
+
+    std::ofstream* output = new std::ofstream(output_file, std::ios::out | std::ios::binary);
+    if (!output->good())
+    {
+        std::cerr << "Error: Could not open output file " << output << "!" << std::endl;
+        exit(1);
+    }
+
+    // Write the binvox file using run-length encoding
+    // where each pair of bytes is of the format (run value, run length)
+    *output << "#binvox 1\n";
+    *output << "dim " << x_size << " " << y_size << " " << z_size << "\n";
+    *output << "translate 0 0 0" << "\n";
+    *output << "scale " << 20.0 << "\n";
+    *output << "data\n";
+    unsigned int run_value = voxel_grid_[0];
+    unsigned int run_length = 0;
+    for (size_t i = 0; i < voxel_grid_.size(); ++i)
+    {
+        if (voxel_grid_[i] == run_value)
+        {
+            // This is a run (repeated bit value)
+            run_length++;
+            if (run_length == 255)
+            {
+                *output << static_cast<char>(run_value);
+                *output << static_cast<char>(run_length);
+                run_length = 0;
+            }
+        }
+        else
+        {
+            // End of a run
+            *output << static_cast<char>(run_value);
+            *output << static_cast<char>(run_length);
+            run_value = voxel_grid_[i];
+            run_length = 1;
+        }
+    }
+    if (run_length > 0)
+    {
+        *output << static_cast<char>(run_value);
+        *output << static_cast<char>(run_length);
+    }
+    output->close();
+
+}
+
 bool WorldSimApi::isPaused() const
 {
     return simmode_->isPaused();
