@@ -163,40 +163,30 @@ AActor* WorldSimApi::createNewActor(const FActorSpawnParameters& spawn_params, c
 
 void WorldSimApi::createVoxelGrid(const int& x_size, const int& y_size, const int& z_size, const float& res, const std::string& output_file)
 {
-    if (!vginit)
-        voxel_grid_.resize(x_size * y_size * z_size);
+    int ncells_x = x_size / res;
+    int ncells_y = y_size / res;
+    int ncells_z = z_size / res;
+    
+    voxel_grid_.resize(ncells_x * ncells_y * ncells_z);
 
     int ctr = 0;
     float scale = 1 / res;
+    float scale_cm = scale * 100;
     FCollisionQueryParams params;
     params.bFindInitialOverlaps = true;
     params.bTraceComplex = false;
-    params.TraceTag = "SVONLeafRasterize";
-    for (float i = 0; i < x_size; i++) {
-        for (float j = 0; j < y_size; j++) {
-            for (float k = 0; k < z_size; k++) {
-                int idx = i * (y_size * x_size) + k * x_size + j;
-                FVector position = FVector((i - x_size/2)*scale, (j - y_size/2)* scale, (k - z_size/2)* scale);
-                voxel_grid_[idx] = (unsigned int)simmode_->GetWorld()->OverlapBlockingTestByChannel(position, FQuat::Identity, ECollisionChannel::ECC_Pawn, FCollisionShape::MakeBox(FVector(1.0)), params);
+    params.TraceTag = "";
+    for (float i = 0; i < ncells_x; i++) {
+        for (float k = 0; k < ncells_z; k++) {
+            for (float j = 0; j < ncells_y; j++) {
+                int idx = i + ncells_x * (k + ncells_z * j);
+                FVector position = FVector((i - ncells_x /2) * scale_cm, (j - ncells_y /2) * scale_cm, (k - ncells_z /2) * scale_cm);
+                voxel_grid_[idx] = (unsigned int)simmode_->GetWorld()->OverlapBlockingTestByChannel(position, FQuat::Identity, ECollisionChannel::ECC_Pawn, FCollisionShape::MakeBox(FVector(res/50)), params);
 
             }
         }
     }
-    /*
-    for (int i = 0; i < x_size; i++) {
-        for (int j = 0; j < y_size; j++) {
-            for (int k = 0; k < z_size; k++) {
-                int idx = k * (y_size * x_size) + j * x_size + i;
-                FVector position = FVector(i - x_size / 2, j - y_size / 2, k - z_size / 2);
-                if (voxel_grid_[idx]) {
-                    DrawDebugPoint(simmode_->GetWorld(), position, 0.1, FColor::Red, true, -1.0);
-                }
-                else
-                    DrawDebugPoint(simmode_->GetWorld(), position, 0.1, FColor::Green, true, -1.0);
-            }
-        }
-    }*/
-
+    
     std::ofstream* output = new std::ofstream(output_file, std::ios::out | std::ios::binary);
     if (!output->good())
     {
@@ -207,11 +197,11 @@ void WorldSimApi::createVoxelGrid(const int& x_size, const int& y_size, const in
     // Write the binvox file using run-length encoding
     // where each pair of bytes is of the format (run value, run length)
     *output << "#binvox 1\n";
-    *output << "dim " << x_size << " " << y_size << " " << z_size << "\n";
-    *output << "translate 0 0 0" << "\n";
-    *output << "scale " << 20.0 << "\n";
+    *output << "dim " << ncells_x << " " << ncells_z << " " << ncells_y << "\n";
+    *output << "translate " << int(-x_size/2) << " " << int(-y_size / 2) << " " << int(-z_size / 2) << "\n";
+    *output << "scale " << scale << "\n";
     *output << "data\n";
-    unsigned int run_value = voxel_grid_[0];
+    bool run_value = voxel_grid_[0];
     unsigned int run_length = 0;
     for (size_t i = 0; i < voxel_grid_.size(); ++i)
     {
@@ -241,7 +231,6 @@ void WorldSimApi::createVoxelGrid(const int& x_size, const int& y_size, const in
         *output << static_cast<char>(run_length);
     }
     output->close();
-
 }
 
 bool WorldSimApi::isPaused() const

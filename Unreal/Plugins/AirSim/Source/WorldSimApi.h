@@ -75,6 +75,5 @@ private:
     ASimModeBase *simmode_;
     ULevelStreamingDynamic *current_level_;
 
-    std::vector<unsigned int> voxel_grid_;
-    bool vginit = false;
+    std::vector<bool> voxel_grid_;
 };
