@@ -813,6 +813,16 @@ class VehicleClient:
         self.client.call('simSetWind', wind)
 
     def createVoxelGrid(self, position, x, y, z, res, of, vehicle_name=''):
+        """
+        Construct and save a binvox-formatted voxel grid of environment
+
+        Args:
+            position (Vector3r): Position around which voxel grid is centered in m
+            x, y, z (float): Size of each voxel grid dimension in m
+            res (float): Resolution of voxel grid in m
+            of (str): Name of output file to save voxel grid as
+
+        """
         self.client.call('simCreateVoxelGrid', position, x, y, z, res, of)
 
 # -----------------------------------  Multirotor APIs ---------------------------------------------
