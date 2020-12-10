@@ -812,6 +812,10 @@ class VehicleClient:
         """
         self.client.call('simSetWind', wind)
 
+    def createVoxelGrid(self, position, x, y, z, res, of, vehicle_name=''):
+        self.client.call_async('simCreateVoxelGrid', position, x, y, z, res, of, vehicle_name)
+
+
 # -----------------------------------  Multirotor APIs ---------------------------------------------
 
 
@@ -1245,10 +1249,6 @@ class MultirotorClient(VehicleClient, object):
         """
         return MultirotorState.from_msgpack(self.client.call('getMultirotorState', vehicle_name))
     getMultirotorState.__annotations__ = {'return': MultirotorState}
-
-    def createVoxelGrid(self, x, y, z, res, of, vehicle_name=''):
-        self.client.call('simCreateVoxelGrid', x, y, z, res, of)
-
 
 # -----------------------------------  Car APIs ---------------------------------------------
 class CarClient(VehicleClient, object):

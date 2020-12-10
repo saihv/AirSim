@@ -161,7 +161,7 @@ AActor* WorldSimApi::createNewActor(const FActorSpawnParameters& spawn_params, c
     return NewActor;
 }
 
-void WorldSimApi::createVoxelGrid(const int& x_size, const int& y_size, const int& z_size, const float& res, const std::string& output_file)
+void WorldSimApi::createVoxelGrid(const Vector3r& position, const int& x_size, const int& y_size, const int& z_size, const float& res, const std::string& output_file)
 {
     int ncells_x = x_size / res;
     int ncells_y = y_size / res;
@@ -176,11 +176,12 @@ void WorldSimApi::createVoxelGrid(const int& x_size, const int& y_size, const in
     params.bFindInitialOverlaps = true;
     params.bTraceComplex = false;
     params.TraceTag = "";
+    auto position_in_UE_frame = simmode_->getGlobalNedTransform().fromGlobalNed(position);
     for (float i = 0; i < ncells_x; i++) {
         for (float k = 0; k < ncells_z; k++) {
             for (float j = 0; j < ncells_y; j++) {
                 int idx = i + ncells_x * (k + ncells_z * j);
-                FVector position = FVector((i - ncells_x /2) * scale_cm, (j - ncells_y /2) * scale_cm, (k - ncells_z /2) * scale_cm);
+                FVector position = FVector((i - ncells_x /2) * scale_cm, (j - ncells_y /2) * scale_cm, (k - ncells_z /2) * scale_cm) + position_in_UE_frame;
                 voxel_grid_[idx] = (unsigned int)simmode_->GetWorld()->OverlapBlockingTestByChannel(position, FQuat::Identity, ECollisionChannel::ECC_Pawn, FCollisionShape::MakeBox(FVector(res/50)), params);
 
             }
