@@ -103,32 +103,19 @@ Visualization Manager:
           world_enu:
             drone_1:
               drone_1/odom_local_enu:
-                drone_1/LidarCustom:
-                  {}
-                front_center_custom_body/static:
-                  {}
-                front_center_custom_optical/static:
-                  {}
-                front_left_custom_body/static:
-                  {}
-                front_left_custom_optical/static:
-                  {}
-                front_right_custom_body/static:
-                  {}
-                front_right_custom_optical/static:
-                  {}
-              front_center_custom_body:
-                {}
-              front_center_custom_optical:
-                {}
-              front_left_custom_body:
-                {}
-              front_left_custom_optical:
-                {}
-              front_right_custom_body:
-                {}
-              front_right_custom_optical:
-                {}
+                drone_1/LidarCustom: {}
+                front_center_custom_body/static: {}
+                front_center_custom_optical/static: {}
+                front_left_custom_body/static: {}
+                front_left_custom_optical/static: {}
+                front_right_custom_body/static: {}
+                front_right_custom_optical/static: {}
+              front_center_custom_body: {}
+              front_center_custom_optical: {}
+              front_left_custom_body: {}
+              front_left_custom_optical: {}
+              front_right_custom_body: {}
+              front_right_custom_optical: {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -156,7 +143,7 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.10000000149011612
       Style: Flat Squares
-      Topic: /airsim_node/front_left_custom/DepthPlanner/registered/points
+      Topic: /airsim_node/front_left_custom/DepthPlanar/registered/points
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true

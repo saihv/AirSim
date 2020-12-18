@@ -95,30 +95,19 @@ Visualization Manager:
         world_ned:
           Drone_1:
             Drone_1/odom_local_ned:
-              camera_1_body/static:
-                {}
-              camera_1_optical/static:
-                {}
-              lidar_1:
-                {}
-            camera_1_body:
-              {}
-            camera_1_optical:
-              {}
+              camera_1_body/static: {}
+              camera_1_optical/static: {}
+              lidar_1: {}
+            camera_1_body: {}
+            camera_1_optical: {}
           Drone_2:
             Drone_2/odom_local_ned:
-              camera_2_body/static:
-                {}
-              camera_2_optical/static:
-                {}
-              lidar_2:
-                {}
-            camera_2_body:
-              {}
-            camera_2_optical:
-              {}
-          world_enu:
-            {}
+              camera_2_body/static: {}
+              camera_2_optical/static: {}
+              lidar_2: {}
+            camera_2_body: {}
+            camera_2_optical: {}
+          world_enu: {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -146,7 +135,7 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.100000001
       Style: Flat Squares
-      Topic: /airsim_node/front_left_custom/DepthPlanner/registered/points
+      Topic: /airsim_node/front_left_custom/DepthPlanar/registered/points
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
