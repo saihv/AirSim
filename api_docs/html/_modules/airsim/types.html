@@ -3,20 +3,25 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>airsim.types &mdash; airsim 1.2.8 documentation</title>
+  <title>airsim.types &mdash; airsim 1.5.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -49,7 +54,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> airsim
+            <a href="../../index.html" class="icon icon-home"> airsim
           
 
           
@@ -57,6 +62,10 @@
 
           
             
+            
+              <div class="version">
+                1.5.0
+              </div>
             
           
 
@@ -120,6 +129,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -165,10 +176,33 @@
         <span class="c1">#return cls(**msgpack.unpack(encoded))</span>
         <span class="k">return</span> <span class="n">obj</span></div></div>
 
+<span class="k">class</span> <span class="nc">_ImageType</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">Scene</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">DepthPlanar</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">DepthPerspective</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">2</span>
+    <span class="k">def</span> <span class="nf">DepthVis</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">3</span>
+    <span class="k">def</span> <span class="nf">DisparityNormalized</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">4</span>
+    <span class="k">def</span> <span class="nf">Segmentation</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">5</span>
+    <span class="k">def</span> <span class="nf">SurfaceNormals</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">6</span>
+    <span class="k">def</span> <span class="nf">Infrared</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">7</span>
 
-<div class="viewcode-block" id="ImageType"><a class="viewcode-back" href="../../index.html#airsim.types.ImageType">[docs]</a><span class="k">class</span> <span class="nc">ImageType</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;DepthPlanner&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[31m&#39;</span><span class="o">+</span><span class="s2">&quot;DepthPlanner has been (correctly) renamed to DepthPlanar. Please use ImageType.DepthPlanar instead.&quot;</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0m&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span>
+
+<div class="viewcode-block" id="ImageType"><a class="viewcode-back" href="../../index.html#airsim.types.ImageType">[docs]</a><span class="k">class</span> <span class="nc">ImageType</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">_ImageType</span><span class="p">):</span>
     <span class="n">Scene</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">DepthPlanner</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">DepthPlanar</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">DepthPerspective</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">DepthVis</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="n">DisparityNormalized</span> <span class="o">=</span> <span class="mi">4</span>
@@ -194,6 +228,14 @@
     <span class="n">Dust</span> <span class="o">=</span> <span class="mi">6</span>
     <span class="n">Fog</span> <span class="o">=</span> <span class="mi">7</span>
     <span class="n">Enabled</span> <span class="o">=</span> <span class="mi">8</span></div>
+
+<div class="viewcode-block" id="Vector2r"><a class="viewcode-back" href="../../index.html#airsim.types.Vector2r">[docs]</a><span class="k">class</span> <span class="nc">Vector2r</span><span class="p">(</span><span class="n">MsgpackMixin</span><span class="p">):</span>
+    <span class="n">x_val</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">y_val</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_val</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_val</span> <span class="o">=</span> <span class="n">x_val</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_val</span> <span class="o">=</span> <span class="n">y_val</span></div>
 
 <div class="viewcode-block" id="Vector3r"><a class="viewcode-back" href="../../index.html#airsim.types.Vector3r">[docs]</a><span class="k">class</span> <span class="nc">Vector3r</span><span class="p">(</span><span class="n">MsgpackMixin</span><span class="p">):</span>
     <span class="n">x_val</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -505,6 +547,10 @@
     <span class="n">ready_message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">can_arm</span> <span class="o">=</span> <span class="kc">False</span></div>
 
+<div class="viewcode-block" id="RotorStates"><a class="viewcode-back" href="../../index.html#airsim.types.RotorStates">[docs]</a><span class="k">class</span> <span class="nc">RotorStates</span><span class="p">(</span><span class="n">MsgpackMixin</span><span class="p">):</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">rotors</span> <span class="o">=</span> <span class="p">[]</span></div>
+
 <div class="viewcode-block" id="ProjectionMatrix"><a class="viewcode-back" href="../../index.html#airsim.types.ProjectionMatrix">[docs]</a><span class="k">class</span> <span class="nc">ProjectionMatrix</span><span class="p">(</span><span class="n">MsgpackMixin</span><span class="p">):</span>
     <span class="n">matrix</span> <span class="o">=</span> <span class="p">[]</span></div>
 
@@ -516,7 +562,8 @@
 <div class="viewcode-block" id="LidarData"><a class="viewcode-back" href="../../index.html#airsim.types.LidarData">[docs]</a><span class="k">class</span> <span class="nc">LidarData</span><span class="p">(</span><span class="n">MsgpackMixin</span><span class="p">):</span>
     <span class="n">point_cloud</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">time_stamp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">pose</span> <span class="o">=</span> <span class="n">Pose</span><span class="p">()</span></div>
+    <span class="n">pose</span> <span class="o">=</span> <span class="n">Pose</span><span class="p">()</span>
+    <span class="n">segmentation</span> <span class="o">=</span> <span class="mi">0</span></div>
 
 <div class="viewcode-block" id="ImuData"><a class="viewcode-back" href="../../index.html#airsim.types.ImuData">[docs]</a><span class="k">class</span> <span class="nc">ImuData</span><span class="p">(</span><span class="n">MsgpackMixin</span><span class="p">):</span>
     <span class="n">time_stamp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -561,6 +608,21 @@
     <span class="n">max_distance</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">relative_pose</span> <span class="o">=</span> <span class="n">Pose</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="Box2D"><a class="viewcode-back" href="../../index.html#airsim.types.Box2D">[docs]</a><span class="k">class</span> <span class="nc">Box2D</span><span class="p">(</span><span class="n">MsgpackMixin</span><span class="p">):</span>
+    <span class="nb">min</span> <span class="o">=</span> <span class="n">Vector2r</span><span class="p">()</span>
+    <span class="nb">max</span> <span class="o">=</span> <span class="n">Vector2r</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Box3D"><a class="viewcode-back" href="../../index.html#airsim.types.Box3D">[docs]</a><span class="k">class</span> <span class="nc">Box3D</span><span class="p">(</span><span class="n">MsgpackMixin</span><span class="p">):</span>
+    <span class="nb">min</span> <span class="o">=</span> <span class="n">Vector3r</span><span class="p">()</span>
+    <span class="nb">max</span> <span class="o">=</span> <span class="n">Vector3r</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DetectionInfo"><a class="viewcode-back" href="../../index.html#airsim.types.DetectionInfo">[docs]</a><span class="k">class</span> <span class="nc">DetectionInfo</span><span class="p">(</span><span class="n">MsgpackMixin</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">geo_point</span> <span class="o">=</span> <span class="n">GeoPoint</span><span class="p">()</span>
+    <span class="n">box2D</span> <span class="o">=</span> <span class="n">Box2D</span><span class="p">()</span>
+    <span class="n">box3D</span> <span class="o">=</span> <span class="n">Box3D</span><span class="p">()</span>
+    <span class="n">relative_pose</span> <span class="o">=</span> <span class="n">Pose</span><span class="p">()</span></div>
+    
 <div class="viewcode-block" id="PIDGains"><a class="viewcode-back" href="../../index.html#airsim.types.PIDGains">[docs]</a><span class="k">class</span> <span class="nc">PIDGains</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Struct to store values of PID gains. Used to transmit controller gain values while instantiating</span>
@@ -667,28 +729,25 @@
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2020, Shital Shah, Ratnesh Madaan, Sai Vemprala, Nicholas Gyde
+        &#169; Copyright 2020, Shital Shah, Ratnesh Madaan, Sai Vemprala, Nicholas Gyde.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
